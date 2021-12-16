@@ -1,13 +1,24 @@
 #define QUEUELIST_H
+#include <stdbool.h>
 
 typedef int Item;
 
-struct node {
+struct listnode {
+	struct listnode *next;
+	Item info;
+	bool visited;
+};
+
+
+typedef struct listnode* Node;
+
+
+/*struct node {
 	Item info;
 	struct node *next;
 };
 
-typedef struct node *Node;
+typedef struct node *Node;*/
 
 typedef struct {
 	Node front;

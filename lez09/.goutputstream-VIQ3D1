@@ -1,0 +1,176 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include "queueList.h"
+
+
+struct graph {
+	int n, m;
+	struct listnode **A;	
+};
+
+typedef struct graph *Graph;
+
+/*crea un grafo con n nodi*/
+Graph graph_new(int n );
+
+/*distrugge il grafo g*/
+void graph_destroy( Graph g );
+
+/*inserisce l’arco (v,w) nel grafo g*/
+void graph_edgeinsert( Graph g,int v,int w ); 
+
+/*legge da standard input un grafo (specificare il formato!!)*/
+Graph graph_read(void);
+
+/*stampa su standard output un grafo (specificare il formato!!)*/
+void graph_print( Graph g );
+
+void BFS( Graph g );
+
+struct listnode* listnode_new(int n);
+
+
+
+int main(void) {
+
+	Graph g = graph_read();
+	
+	graph_print(g);
+	BFS(g);
+	return 0;
+}
+
+void BFS( Graph g ) {
+	
+	int i = 0;
+	int visIndex = 0;
+	bool found = false;
+	Queue *q = create_queue();
+	
+	struct listnode *visited[g -> n];
+
+	while(g-> A[i] -> next == NULL) {
+		i++;
+	}
+	
+	visited[visIndex] = g->A[i]; // primo nodo connesso
+	enqueue(q, g -> A[i]);
+	print_queue(q);
+	visIndex++;
+	while(!is_empty_queue(q)) {
+		struct listnode *u = dequeue(q);
+		printf("u1: %d\n", u-> v);
+		for (struct listnode *item = u -> next; item != NULL; item = item -> next ) {
+			for(int i = 0; i < visIndex; i++) {
+				if(visited[i] -> v == u -> v) {
+					printf("u2: %d %d\n",i, visited[i] -> v); 
+					printf("Found\n");
+					found = true;
+					break;
+				}
+			}
+			if(!found) {
+				printf("u3: %d\n", u-> v);
+				visited[visIndex] = u;
+				visIndex++;
+				enqueue(q,u);
+				print_queue(q);
+			}
+		}
+		
+	}
+	 
+
+
+}
+
+Graph graph_new(int n ) {
+	int i; Graph g;
+	
+	
+	g = malloc( sizeof(struct graph) );
+	g -> A = calloc( n,sizeof(struct listnode*));
+	
+	for(int i = 0; i < n; i++) {
+		g -> A[i] = listnode_new(i);
+	}
+	
+		
+	g -> n = n;
+	
+	return g;
+
+}
+
+struct listnode* listnode_new(int n) {
+	struct listnode *l = malloc(sizeof( struct listnode*));
+	
+	l -> v = n;
+	l -> next = NULL;
+	return l;
+}
+
+void graph_edgeinsert( Graph g,int n,int w ) {
+
+	for(struct listnode *item = g -> A[n]; item != NULL; item = item -> next) {
+		if(item -> next == NULL) { //inserimento nel fondo
+			item -> next = listnode_new(w);
+			break;
+		} else if( item -> next -> v > w) {
+			struct listnode *new = listnode_new(w);
+			struct listnode *oldNext = item -> next;
+			
+			item -> next = new;
+			new -> next = oldNext;
+			break;
+		}
+		
+		
+	}
+}
+
+Graph graph_read(void) {
+	int n;
+	//printf("Inserisci il numero di nodi: ");
+	scanf("%d", &n);
+	
+	Graph g = graph_new(n);
+	int u,v;
+	int m = (n*(n-1))/2;
+	
+	while(m >=0) {
+		//printf("Inserisci nodo: ");
+		
+		scanf("%d", &u);
+		scanf("%d", &v);
+		
+		if (u < 0 || v < 0)
+			break;
+		
+		graph_edgeinsert(g,u,v);
+		m--;
+	}
+	
+	return g;
+}
+
+void graph_print( Graph g ) {
+	
+	for(int i = 0; i < g->n; i++) {
+		printf("%d", i);
+		
+		for (struct listnode *item = g->A[i] -> next; item != NULL; item = item -> next ) {
+			printf("->%d", item -> v);
+		}
+		
+		
+		printf("\n");
+	}
+}
+
+
+
+
+
+

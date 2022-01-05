@@ -22,4 +22,8 @@ int main (void){
 	printf("Front %d\n", frontValue(q));
 	destroy_queue(q);
 	print_queue(q);
+	
+	float x = (float)rand()/(float)(1);
+	
+	printf("%.2f\n",x);
 }

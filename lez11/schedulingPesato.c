@@ -37,21 +37,9 @@ int main(void) {
 	
 	for(int i = 0; i < n; i++) {
 		val[i] = -1;
-		print_int(intervalli[i]);
-	}
-	printf("\n");
-	
-	for(int i = 0; i < n; i++) {
-		printf("P[%d]\n",setP(intervalli,i));
 	}
 	
-	printf("\n");
-	for(int j = 0; j < n; j++) {
-			//printf("%d\n",j);
-			int r = Opt(intervalli,j,val);
-			printf("Opt[%d] => %d\n",j,r);
-	}
-	printf("\n");
+	printf("Optimal value: %d\n",Opt(intervalli, n-1, val));
 	FindSolution(intervalli, n-1, val);
 	
 	
